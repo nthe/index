@@ -14,6 +14,7 @@ class Page(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.ids = set()
         self.links = []
+        self.icons = []
         self.table = None
         self.overview_rows = 0
 
@@ -23,6 +24,8 @@ class Page(HTMLParser):
             self.ids.add(attrs["id"])
         if tag == "a" and attrs.get("name"):
             self.ids.add(attrs["name"])
+        if tag == "link" and "icon" in attrs.get("rel", "").split():
+            self.icons.append(attrs.get("href", ""))
         if tag == "table":
             self.table = attrs.get("id")
         if tag == "tr" and self.table == "overview-table":
@@ -44,6 +47,8 @@ for path in ROOT.rglob("*.html"):
 
 errors = []
 for path, page in pages.items():
+    if not any((path.parent / icon).resolve() == ROOT / "assets/favicon.svg" for icon in page.icons):
+        errors.append(f"{path.relative_to(ROOT)}: missing favicon")
     if not any(link.endswith("/assets/theme.css") or link == "assets/theme.css" for link in page.links):
         errors.append(f"{path.relative_to(ROOT)}: missing theme stylesheet")
     if not any(link.endswith("/assets/theme.js") or link == "assets/theme.js" for link in page.links):
