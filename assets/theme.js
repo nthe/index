@@ -4,11 +4,6 @@
   try { if (localStorage.getItem('nthe-theme') === 'dark') theme = 'dark'; } catch (_) {}
   root.dataset.theme = theme;
   const home = new URL('../', document.currentScript.src).href;
-  const tracker = document.createElement('script');
-  tracker.async = true;
-  tracker.src = 'https://umami.ttdev.xyz/script.js';
-  tracker.dataset.websiteId = 'db465713-3cda-47fb-aff7-ca21d3ea764f';
-  document.head.append(tracker);
 
   document.addEventListener('DOMContentLoaded', () => {
     const bar = document.createElement('div');
