@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="One-shot-shunt: a native Pi extension built from one prompt to route broad reads to a scoped helper.">
+  <title>One-shot-shunt — CodeCon 26</title>
+  <style>
+    :root {
+      --bg: #fff;
+      --surface: #f4f4f4;
+      --text: #1b1b1b;
+      --muted: #595959;
+      --line: #dedede;
+      --accent: #005a9e;
+      --focus: #004e8a;
+      --mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
+      --sans: Arial, Helvetica, ui-sans-serif, system-ui, sans-serif;
+    }
+    html[data-theme="dark"] {
+      --bg: #161616;
+      --surface: #232323;
+      --text: #f3f3f3;
+      --muted: #b7b7b7;
+      --line: #3b3b3b;
+      --accent: #8cc8ff;
+      --focus: #a8d1ff;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 1.06rem/1.65 var(--sans); }
+    a { color: var(--accent); text-decoration-thickness: .06em; text-underline-offset: .18em; }
+    a:hover { text-decoration-thickness: .12em; }
+    :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+    .shell { width: min(740px, calc(100% - 2rem)); margin-inline: auto; }
+    .topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; min-height:64px; border-bottom:1px solid var(--line); }
+    .wordmark { color:var(--text); font:500 .72rem/1.4 var(--mono); text-decoration:none; }
+    .topbar-links { display:flex; gap:1.25rem; font: .72rem/1.4 var(--mono); }
+    .topbar-links a { color:var(--muted); text-decoration:none; }
+    .topbar-links a:hover { color:var(--accent); }
+    main { padding-bottom:4rem; }
+    .hero { display:block; padding:3rem 0 2.4rem; }
+    .eyebrow, .section-kicker { margin:0; color:var(--muted); font: .74rem/1.5 var(--mono); }
+    h1 { max-width:700px; margin:.75rem 0 1rem; font-size:clamp(2rem,5vw,2.65rem); line-height:1.14; letter-spacing:-.035em; font-weight:600; }
+    .lede { max-width:680px; margin:0; color:var(--muted); font-size:1.06rem; }
+    .hero-links { display:flex; flex-wrap:wrap; gap:.6rem 1.2rem; margin-top:1.3rem; }
+    .hero-links a { font-size:.92rem; font-weight:600; }
+    .route { margin-top:2.5rem; padding:1.15rem 0; border-block:1px solid var(--line); }
+    .route h2 { margin:0 0 .6rem; color:var(--muted); font: .72rem/1.5 var(--mono); }
+    .route ol { list-style:none; margin:0; padding:0; counter-reset:route; }
+    .route li { display:grid; grid-template-columns:2rem 1fr; gap:.6rem; padding:.55rem 0; border-top:1px solid var(--line); counter-increment:route; }
+    .route li::before { content:"0" counter(route); color:var(--accent); font:.72rem/1.7 var(--mono); }
+    .route li:not(:last-child)::after { display:none; }
+    .route strong { display:block; font-size:.96rem; font-weight:600; }
+    .route span { display:block; color:var(--muted); font-size:.9rem; }
+    section { border-top:1px solid var(--line); padding-block:2.7rem; }
+    .section-head { display:block; margin-bottom:1.15rem; }
+    h2 { margin:.4rem 0 0; font-size:1.55rem; line-height:1.25; letter-spacing:-.02em; font-weight:600; }
+    .section-head p { max-width:680px; margin:.65rem 0 0; color:var(--muted); font-size:1rem; }
+    .prompt-frame { border-block:1px solid var(--line); }
+    .prompt-bar { display:flex; justify-content:space-between; gap:1rem; padding:.65rem 0; border-bottom:1px solid var(--line); color:var(--muted); font:.72rem/1.5 var(--mono); }
+    .prompt-bar span:first-child { color:var(--accent); }
+    .prompt-text { margin:0; padding:1rem 0 1rem 1rem; border-left:2px solid var(--line); color:var(--text); font:inherit; white-space:pre-wrap; overflow-wrap:anywhere; }
+    .context-grid { display:grid; grid-template-columns:1fr; gap:1.4rem; }
+    .context-grid article + article { padding-top:1.3rem; border-top:1px solid var(--line); }
+    .context-grid h3 { margin:0 0 .45rem; font-size:1.08rem; font-weight:600; }
+    .context-grid p { max-width:680px; margin:0; color:var(--muted); }
+    .context-grid p + p { margin-top:.8rem; }
+    .transcript-row { display:block; padding-top:1rem; border-top:1px solid var(--line); }
+    .transcript-row p { margin:.35rem 0 0; color:var(--muted); font-size:.95rem; }
+    .transcript-link { display:inline-flex; gap:.4rem; margin-top:.8rem; color:var(--accent); text-decoration:none; font-weight:600; }
+    .transcript-link:hover { text-decoration:underline; }
+    footer { border-top:1px solid var(--line); padding:1rem 0 2rem; color:var(--muted); font:.72rem/1.5 var(--mono); }
+    @media (max-width:520px) {
+      .topbar { align-items:flex-start; flex-direction:column; justify-content:center; padding-block:.8rem; }
+      .topbar-links { flex-wrap:wrap; gap:.5rem 1rem; }
+      .prompt-bar { flex-direction:column; gap:.2rem; }
+    }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+  </style>
+  <link rel="stylesheet" href="../../../assets/theme.css">
+  <script src="../../../assets/theme.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelector(".site-theme-bar")?.setAttribute("role", "banner");
+    });
+  </script>
+</head>
+<body>
+  <nav class="shell topbar" aria-label="Project navigation">
+    <a class="wordmark" href="../">CODECON 26 / TOKENS UNDER CONTROL</a>
+    <div class="topbar-links">
+      <a href="../">Talk</a>
+      <a href="../../..">Main site</a>
+    </div>
+  </nav>
+  <main class="shell">
+    <div class="hero">
+      <div>
+        <p class="eyebrow">TASK 03 / ONE-SHOT-SHUNT</p>
+        <h1>One prompt.<br>A native Pi read gate.</h1>
+        <p class="lede">A one-prompt build of one-shot-shunt: a Pi extension that blocks broad reads and waits for a scoped, lower-cost helper to return evidence.</p>
+        <div class="hero-links">
+          <a class="primary" href="#original-prompt">Read the original prompt</a>
+          <a href="session.html">View the session</a>
+        </div>
+      </div>
+      <aside class="route" aria-labelledby="route-title">
+        <h2 id="route-title">THE READ PATH</h2>
+        <ol>
+          <li><div><strong>Parent reads</strong><span>Small reads pass through.</span></div></li>
+          <li><div><strong>Gate blocks bulk</strong><span>No large content reaches the parent.</span></div></li>
+          <li><div><strong>Child searches scope</strong><span>It gets paths, a reason, and checks.</span></div></li>
+          <li><div><strong>Parent waits</strong><span>Accepted evidence releases covered files.</span></div></li>
+        </ol>
+      </aside>
+    </div>
+
+    <section id="original-prompt" aria-labelledby="prompt-title">
+      <div class="section-head">
+        <div><p class="section-kicker">THE INPUT</p><h2 id="prompt-title">Original prompt</h2></div>
+        <p>This is the session's first and only user prompt. Text is preserved as written.</p>
+      </div>
+      <div class="prompt-frame">
+        <div class="prompt-bar"><span>USER PROMPT</span><span>ONE INPUT</span></div>
+        <blockquote class="prompt-text">Build a native extension, plugin or hook that intercepts large or bulk reads (via read tool) of calling agent and suggests delegation to cheaper sub-agent(s). Delegation inputs are searching scope (files, glob), reason for search and acceptance criteria of valid answer.The operation must be blocking until answer provided.
+
+Please, make no mistakes.</blockquote>
+      </div>
+    </section>
+
+    <section aria-labelledby="meaning-title">
+      <div class="section-head">
+        <div><p class="section-kicker">SCOPE AND CONTEXT</p><h2 id="meaning-title">What “one-shot” means here</h2></div>
+      </div>
+      <div class="context-grid">
+        <article>
+          <h3>One starting prompt</h3>
+          <p>One-shot means this implementation began with the single prompt above. It does not mean the extension handles only one read. The session still contains the agent's work after that prompt.</p>
+        </article>
+        <article>
+          <h3>Related to CC Shunt, not proven equivalent</h3>
+          <p>Both projects address broad reads by routing scoped search to a helper and waiting for a result. CC Shunt uses read hooks and Scout or worker routes across several coding harnesses. One-shot-shunt is a native Pi extension with a scoped delegation tool and acceptance checks.</p>
+          <p>They are related experiments. This page does not claim the same implementation, proven equivalence, or comparable performance.</p>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="session-title">
+      <div class="section-head">
+        <div><p class="section-kicker">SESSION RECORD</p><h2 id="session-title">See the work after the prompt</h2></div>
+        <p>Open a static, searchable transcript. It labels removed data and does not load external code.</p>
+      </div>
+      <div class="transcript-row">
+        <div><strong>Sanitized session view</strong><p>System context and internal reasoning are omitted. Personal paths, URLs, and sensitive values are redacted.</p></div>
+        <a class="transcript-link" href="session.html">Open session.html <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+  <footer><div class="shell">CodeCon 26 · Task 03</div></footer>
+</body>
+</html>

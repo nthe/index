@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="An independent investigation of Spotify Shunt, delegated code reading, CC Shunt, and related Offline Shunt experiments.">
+  <title>From Spotify Shunt to CC Shunt — CodeCon 26</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --panel: #f4f4f4;
+      --panel-soft: #fafafa;
+      --text: #161616;
+      --muted: #414141;
+      --dim: #5b5b5b;
+      --line: #dedede;
+      --line-strong: #a9a9a9;
+      --accent: #005ea8;
+      --link-hover: #00467f;
+      --blue: #005ea8;
+      --orange: #005ea8;
+      --purple: #005ea8;
+      --best-border: #b8b8b8;
+      --best-start: #f5f5f5;
+      --mono: "Courier New", Courier, monospace;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    html[data-theme="dark"] {
+      --bg: #161616;
+      --panel: #222222;
+      --panel-soft: #1d1d1d;
+      --text: #f4f4f4;
+      --muted: #c7c7c7;
+      --dim: #a5a5a5;
+      --line: #3b3b3b;
+      --line-strong: #777777;
+      --accent: #8dc4ff;
+      --link-hover: #c2e0ff;
+      --blue: #8dc4ff;
+      --orange: #8dc4ff;
+      --purple: #8dc4ff;
+      --best-border: #555555;
+      --best-start: #222222;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-underline-offset: .2em; text-decoration-thickness: 1px; }
+    a:hover { color: var(--link-hover); }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+    main { width: min(100% - 3rem, 46.25rem); margin: 0 auto; padding: 1.25rem 0 4rem; }
+    .topline, .eyebrow, .section-kicker, .metric-label, .tag, .source-number {
+      font-family: var(--mono);
+      letter-spacing: .02em;
+    }
+    .topline { display: flex; justify-content: space-between; gap: 1rem; align-items: center; color: var(--dim); font-size: .8rem; }
+    .topline a { color: var(--muted); }
+    .topline nav { display: flex; flex-wrap: wrap; gap: 1.2rem; }
+    header { max-width: 46rem; padding: 3rem 0 2.2rem; }
+    .eyebrow { color: var(--dim); font-size: .78rem; }
+    h1 { max-width: 22ch; margin: .8rem 0 1rem; font-size: clamp(2.15rem, 5vw, 2.65rem); line-height: 1.15; letter-spacing: -.035em; font-weight: 620; }
+    .dek { max-width: 44rem; margin: 0; color: var(--muted); font-size: 1.05rem; line-height: 1.6; }
+    .hero-grid { display: block; }
+    .finding { border-top: 1px solid var(--line); padding: 1.15rem 0; }
+    .metric-label { color: var(--dim); font-size: .76rem; }
+    .big-number { margin: .3rem 0 0; color: var(--text); font-size: 2.3rem; line-height: 1.1; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+    .finding h2 { margin: .35rem 0 .45rem; font-size: 1.15rem; line-height: 1.35; letter-spacing: 0; }
+    .finding p, .hero-note p { margin: .55rem 0 0; color: var(--muted); }
+    .hero-note { margin: .2rem 0 1.5rem; padding: .1rem 0 .1rem 1rem; border-left: 2px solid var(--line-strong); }
+    .hero-note strong { color: var(--text); }
+    .hero-note .tag { color: var(--dim); font-size: .76rem; }
+    .caveat { padding-left: 0; }
+    .stats { margin-top: 1.5rem; border-top: 1px solid var(--line); }
+    .stat { display: grid; grid-template-columns: minmax(8rem, .8fr) minmax(10rem, 1fr) minmax(0, 1.3fr); gap: .8rem; align-items: baseline; padding: .7rem 0; border-bottom: 1px solid var(--line); }
+    .stat strong { display: block; margin: 0; font-size: 1.08rem; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.4; }
+    .stat span:last-child { color: var(--muted); font-size: .9rem; }
+    section { border-top: 1px solid var(--line); margin-top: 3.2rem; padding-top: 1.15rem; }
+    .section-head { display: block; margin-bottom: 1.4rem; }
+    .section-kicker { color: var(--dim); font-size: .76rem; margin-bottom: .4rem; }
+    h2 { margin: 0; font-size: 1.7rem; line-height: 1.28; letter-spacing: -.025em; font-weight: 620; }
+    .section-intro { max-width: 46rem; color: var(--muted); margin: .55rem 0 0; }
+    .flow { display: block; padding: 0; margin: 1.2rem 0 0; border-top: 1px solid var(--line); list-style: none; counter-reset: step; }
+    .flow li { counter-increment: step; display: grid; grid-template-columns: 2.2rem minmax(8rem, 10rem) minmax(0, 1fr); gap: .5rem .75rem; align-items: baseline; min-height: 0; padding: .8rem 0; border-bottom: 1px solid var(--line); background: transparent; }
+    .flow li::before { content: "0" counter(step); grid-column: 1; grid-row: 1; color: var(--dim); font: .8rem var(--mono); }
+    .flow li::after { content: none; }
+    .flow strong { grid-column: 2; grid-row: 1; display: block; margin: 0; font-size: .98rem; line-height: 1.4; }
+    .flow span { grid-column: 3; grid-row: 1; display: block; color: var(--muted); font-size: .94rem; line-height: 1.5; }
+    .flow .local, .flow .remote { color: var(--muted); }
+    .callout { margin-top: 1.2rem; padding: .1rem 0 .1rem 1rem; border-left: 2px solid var(--line-strong); background: transparent; color: var(--muted); }
+    .callout strong { color: var(--text); }
+    .published { display: block; }
+    .published p { color: var(--muted); margin: 0 0 1rem; }
+    .published strong { color: var(--text); }
+    .comparison-list { border-top: 1px solid var(--line); }
+    .comparison { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem; padding: .7rem 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+    .comparison span { color: var(--muted); font: .8rem var(--mono); }
+    .comparison strong { color: var(--text); font: .95rem var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .measure-note { margin-top: .8rem !important; color: var(--dim) !important; font-size: .88rem; }
+    .table-wrap { max-width: 100%; overflow-x: auto; border: 1px solid var(--line); }
+    table { width: 100%; min-width: 44rem; border-collapse: collapse; text-align: left; }
+    caption { padding: .75rem .85rem; text-align: left; color: var(--muted); background: var(--panel); font-size: .88rem; }
+    th, td { padding: .7rem .8rem; border-top: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); background: var(--panel); font: .76rem/1.45 var(--mono); text-transform: none; }
+    td { color: var(--muted); font-size: .9rem; }
+    td:first-child { width: 22%; color: var(--text); font-weight: 600; }
+    td:nth-child(2) { width: 32%; color: var(--text); font-variant-numeric: tabular-nums; }
+    .scroll-hint { display: none; margin: .5rem 0 0; color: var(--dim); font-size: .8rem; }
+    .result-grid { display: block; margin-top: 1.2rem; border-top: 1px solid var(--line); }
+    .result-card { padding: 1rem 0; background: transparent; border: 0; border-bottom: 1px solid var(--line); }
+    .result-card .tag { display: block; margin-bottom: .35rem; color: var(--dim); font-size: .76rem; }
+    .result-card h3 { margin: 0; font-size: 1.12rem; line-height: 1.4; font-weight: 620; }
+    .result-card p { margin: .4rem 0 0; color: var(--muted); font-size: .95rem; }
+    .result-card strong { color: var(--text); }
+    .result-card.best { border-color: var(--line); background: transparent; }
+    .result-card.best .tag { color: var(--accent); }
+    .method-grid { display: block; }
+    .method-item { display: grid; grid-template-columns: minmax(8rem, .4fr) minmax(0, 1fr); gap: 1rem; padding: .85rem 0; border-top: 1px solid var(--line); }
+    .method-item h3 { margin: 0; font-size: .98rem; line-height: 1.5; font-weight: 620; }
+    .method-item p { margin: 0; color: var(--muted); font-size: .94rem; }
+    .metric-table { margin-top: 1.25rem; }
+    .sources { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
+    .sources li { display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: .7rem; padding: .85rem 0; border-bottom: 1px solid var(--line); }
+    .source-number { color: var(--dim); font-size: .8rem; padding-top: .1rem; }
+    .sources p { margin: .25rem 0 0; color: var(--muted); font-size: .9rem; }
+    .study-record { margin-top: 1rem; padding: .1rem 0 .1rem 1rem; border: 0; border-left: 2px solid var(--line-strong); color: var(--muted); font-size: .9rem; }
+    code, pre { background: var(--panel); color: var(--text); }
+    code { padding: .1em .25em; font-family: var(--mono); font-size: .9em; }
+    pre { max-width: 100%; overflow-x: auto; padding: 1rem; border: 1px solid var(--line); }
+    blockquote { margin: 1rem 0; padding: .1rem 0 .1rem 1rem; border-left: 2px solid var(--line-strong); color: var(--muted); }
+    footer { display: flex; justify-content: space-between; gap: 1rem; margin-top: 3rem; padding-top: .8rem; border-top: 1px solid var(--line); color: var(--dim); font: .8rem var(--mono); }
+    footer a { color: var(--muted); }
+    @media (max-width: 800px) {
+      .hero-grid, .published { display: block; }
+    }
+    @media (max-width: 560px) {
+      main { width: calc(100% - 2rem); padding-top: 1rem; }
+      .topline { align-items: flex-start; }
+      .topline nav { gap: .8rem; }
+      header { padding: 2.5rem 0 1.8rem; }
+      h1 { font-size: clamp(2rem, 8vw, 2.35rem); }
+      .stat { grid-template-columns: minmax(0, 1fr) auto; gap: .15rem .65rem; }
+      .stat .metric-label { grid-column: 1; grid-row: 1; }
+      .stat strong { grid-column: 2; grid-row: 1; }
+      .stat span:last-child { grid-column: 1 / -1; grid-row: 2; }
+      .flow li { grid-template-columns: 2rem minmax(0, 1fr); gap: .2rem .65rem; }
+      .flow li::before { grid-column: 1; grid-row: 1 / span 2; }
+      .flow strong { grid-column: 2; grid-row: 1; }
+      .flow span { grid-column: 2; grid-row: 2; }
+      .method-item { display: block; }
+      .method-item h3 { margin-bottom: .25rem; }
+      .scroll-hint { display: block; }
+      section { margin-top: 2.6rem; }
+      footer { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+  <link rel="stylesheet" href="../../../assets/theme.css">
+  <script src="../../../assets/theme.js"></script>
+</head>
+<body>
+  <main>
+    <div class="topline">
+      <a href="../">← CodeCon 26</a>
+      <nav aria-label="Site navigation">
+        <a href="../../..">Main site</a>
+        <a href="#sources">Sources ↓</a>
+      </nav>
+    </div>
+
+    <header>
+      <div class="eyebrow">CodeCon 26 · Research note 02</div>
+      <h1>A cheaper read can use more tokens.</h1>
+      <p class="dek">Shunt sends broad code-reading work to a second model, then returns a short, cited answer to the main assistant. We examined Spotify’s published Shunt, the independent CC Shunt package, and related local Shunt experiments. A lower estimated bill can come with more tokens and more time.</p>
+    </header>
+
+    <div class="hero-grid" role="group" aria-labelledby="finding-title">
+      <article class="finding">
+        <div class="metric-label">CC Shunt · corrected broad-read experiment</div>
+        <div class="big-number">−23.9%</div>
+        <h2 id="finding-title">Estimated Codex credits with Scout MCP + hook v2</h2>
+        <p>It cost less in all 12 paired blocks. All 12 answers passed review. This is a local CC Shunt result, not a Spotify benchmark.</p>
+      </article>
+      <aside class="hero-note">
+        <span class="tag">Read this with the result</span>
+        <p><strong>More work moved to the worker.</strong> The CC Shunt run used 129.4% more total model tokens and 184.5% more summed parent-session time than direct reading.</p>
+        <p class="caveat">A related Offline Shunt checklist run reached −31.8%, in a separate cohort. It does not establish that the CC Shunt package saves 31.8%.</p>
+      </aside>
+    </div>
+
+    <div class="stats" role="group" aria-label="CC Shunt experiment summary">
+      <div class="stat"><span class="metric-label">Estimated credits</span><strong>67.47 → 51.33</strong><span>−23.9% against its paired direct controls</span></div>
+      <div class="stat"><span class="metric-label">All-model tokens</span><strong>5.54M → 12.71M</strong><span>+129.4%, parent and Scout together</span></div>
+      <div class="stat"><span class="metric-label">Summed session time</span><strong>26.9 → 76.5 min</strong><span>+184.5%; sums parent CLI time, including waits</span></div>
+    </div>
+
+    <section aria-labelledby="mechanism-title">
+      <div class="section-head">
+        <div class="section-kicker">01 / Mechanism</div>
+        <div>
+          <h2 id="mechanism-title">Move the reading, not the decision.</h2>
+          <p class="section-intro">The parent assistant still owns the task. Shunt changes who reads the source. A hook can block a recognized broad read and direct the parent to Scout. Scout searches related files and returns a short answer with file and line evidence. The parent checks the evidence and continues.</p>
+        </div>
+      </div>
+      <!-- pele:cc-shunt:start -->
+<figure class="diagram"><svg xmlns="http://www.w3.org/2000/svg" class="pele pele-flowchart" viewBox="0 0 249 484" width="249" height="484" style="max-width:100%;height:auto;--_bg:var(--pele-bg,#fff);--_fg:var(--pele-fg,#1f1f1f);--_m:var(--pele-muted,#6e6e6e);--_l:var(--pele-line,#1f1f1f);--_s:var(--pele-surface,#f3f3f3);--_a:var(--pele-surface-alt,#e6e6e6);--_b:var(--pele-border,#8a8a8a);--_c:var(--pele-accent,#5b7bd5);color:var(--_fg);--_r:var(--pele-radius,4px);--_fm:var(--pele-font-mono,monospace);font:16px sans-serif;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;font-family:var(--pele-font,sans-serif)" fill="var(--_fg)" role="img" aria-label="A parent receives a task. A hook blocks a broad read. Scout searches files and returns cited evidence. The parent checks the evidence and continues."><g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round"><g class="pele-edge" data-id="L_A_B_0"><path d="M124.26,56L124.26,97"/><path class="pele-marker" d="M124.26,104L120.9,96L127.62,96Z" fill="var(--_l)" stroke="none"/></g><g class="pele-edge" data-id="L_B_C_0"><path d="M124.26,152L124.26,193"/><path class="pele-marker" d="M124.26,200L120.9,192L127.62,192Z" fill="var(--_l)" stroke="none"/></g><g class="pele-edge" data-id="L_C_D_0"><path d="M124.26,248L124.26,289"/><path class="pele-marker" d="M124.26,296L120.9,288L127.62,288Z" fill="var(--_l)" stroke="none"/></g><g class="pele-edge" data-id="L_D_E_0"><path d="M124.26,362L124.26,403"/><path class="pele-marker" d="M124.26,410L120.9,402L127.62,402Z" fill="var(--_l)" stroke="none"/></g></g><g class="pele-nodes"><g class="pele-node pele-shape-rect" data-id="A" transform="translate(124.26,32)"><rect x="-97.14" y="-24" width="194.29" height="48" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Parent receives a task</text></g><g class="pele-node pele-shape-rect" data-id="B" transform="translate(124.26,128)"><rect x="-109.15" y="-24" width="218.3" height="48" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Hook blocks a broad read</text></g><g class="pele-node pele-shape-rect" data-id="C" transform="translate(124.26,224)"><rect x="-116.26" y="-24" width="232.53" height="48" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Scout searches related files</text></g><g class="pele-node pele-shape-rect" data-id="D" transform="translate(124.26,329)"><rect x="-84.7" y="-33" width="169.39" height="66" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Scout returns cited</tspan><tspan x="0" y="16.1">evidence</tspan></text></g><g class="pele-node pele-shape-rect" data-id="E" transform="translate(124.26,443)"><rect x="-102.93" y="-33" width="205.86" height="66" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Parent checks evidence</tspan><tspan x="0" y="16.1">and continues</tspan></text></g></g></svg><figcaption>A broad read can be routed to Scout. The parent checks the returned evidence. <a href="../diagrams/cc-shunt.mmd">Mermaid source</a></figcaption></figure>
+<!-- pele:cc-shunt:end -->
+      <ol class="flow" aria-label="CC Shunt reading flow">
+        <li><strong>Ask a task</strong><span>The parent gets the user's question and decides what source evidence it needs.</span></li>
+        <li><strong>Route a broad read</strong><span>By default, CC Shunt's local hook blocks some reads above 120 selected lines and tells the parent to call Scout.</span></li>
+        <li><strong>Scout searches</strong><span>A worker model follows starting paths, finds related code, and checks relevant files.</span></li>
+        <li><strong>Return evidence</strong><span>Scout sends a concise answer with exact file and line references.</span></li>
+        <li><strong>Parent verifies</strong><span>The parent uses the answer, reads a short section if needed, then edits or tests.</span></li>
+      </ol>
+      <div class="callout"><strong>Spotify and CC Shunt use different routes.</strong> Spotify Shunt sends work through Spotify Portal. CC Shunt's hooks and routing run in the harness; its tested Codex worker still used a provider-hosted model. “Offline” in the local research means “without Portal,” not “models run on the laptop.” <a href="#source-1">[1]</a> <a href="#source-4">[4]</a></div>
+    </section>
+
+    <section aria-labelledby="spotify-title">
+      <div class="section-head">
+        <div class="section-kicker">02 / Published claim</div>
+        <div>
+          <h2 id="spotify-title">What Spotify measured</h2>
+          <p class="section-intro">Spotify reports fewer tokens in Claude's context for three selected bulk-read comparisons in a 162,000-line Java repository. The published figures are not full-session cost or quality measurements. <a href="#source-1">[1]</a> <a href="#source-2">[2]</a></p>
+        </div>
+      </div>
+      <div class="published">
+        <div>
+          <p><strong>Reported reduction: 82–94%, with a 90% mean.</strong> This compares direct source reads with short Shunt answers in the parent context. It does not count the worker's tokens as a full-session total.</p>
+          <p>The benchmark does not establish total cost, time, or answer accuracy. Its code estimates token counts from text size; it is not a matched, paid, end-to-end session audit. <a href="#source-3">[3]</a></p>
+          <p class="measure-note">Scope matters: fewer tokens in one context is not the same measure as fewer tokens or lower cost across all models.</p>
+        </div>
+        <div>
+          <div class="comparison-list" role="group" aria-label="Spotify published parent-context comparisons">
+            <div class="comparison"><span>Comparison 1 · direct → Shunt</span><strong>33,684 → 5,737</strong></div>
+            <div class="comparison"><span>Comparison 2 · direct → Shunt</span><strong>75,990 → 4,148</strong></div>
+            <div class="comparison"><span>Comparison 3 · direct → Shunt</span><strong>16,221 → 821</strong></div>
+          </div>
+          <p class="measure-note">Reported parent-context token estimates. Worker use and end-to-end task measures are not included in these comparisons.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="variants-title">
+      <div class="section-head">
+        <div class="section-kicker">03 / Variants</div>
+        <div>
+          <h2 id="variants-title">The same idea did not win every test.</h2>
+          <p class="section-intro">We tested fixed-file readers, Scout prompts, hooks, one-shot reads, and code-writing delegation. The table below summarizes related Offline Shunt tests through Codex. They share the delegation idea, but not every result tests the CC Shunt package. Cost results changed with the task and version; most early comparisons had only three pairs.</p>
+        </div>
+      </div>
+      <div class="table-wrap" role="region" tabindex="0" aria-label="Tested Shunt variants and results. Scroll horizontally on a small screen.">
+        <table>
+          <caption>Selected Offline Shunt / Codex trials. Each result compares a method with its own direct controls. These are not Spotify trials.</caption>
+          <thead>
+            <tr><th scope="col">Variant</th><th scope="col">Measured result</th><th scope="col">What it shows</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fixed-file bulk-read MCP<br><span class="metric-label">3 pairs per task</span></td>
+              <td>Document search: −6.5% estimated cost.<br>Translation sync: +45.6%.</td>
+              <td>All answers passed in both tasks. One reader design helped one task and raised cost on another.</td>
+            </tr>
+            <tr>
+              <td>Scout + hook v1<br><span class="metric-label">3 pairs per task</span></td>
+              <td>Document search: +6.6% cost.<br>Translation sync: +68.5%.</td>
+              <td>The hook did not deny a read in these cohorts. They do not measure automatic hook-triggered delegation.</td>
+            </tr>
+            <tr>
+              <td>Scout + hook v2<br><span class="metric-label">3 pairs per task</span></td>
+              <td>First block: −16.1% on document search and −14.3% on translation sync.</td>
+              <td>All answer checks passed. Tokens and time rose in both tasks. These small results did not repeat consistently.</td>
+            </tr>
+            <tr>
+              <td>Scout v2 replay<br><span class="metric-label">3 pairs per task</span></td>
+              <td>Document search: −22.0%, but 11/12 checks passed.<br>Translation sync: +52.7%, 12/12 passed.</td>
+              <td>The document result has only two fully correct matched pairs. Translation cost moved the other way on replay.</td>
+            </tr>
+            <tr>
+              <td>Context-inferred one-shot + Scout fallback<br><span class="metric-label">3 forced-read pairs</span></td>
+              <td>−46.4% estimated cost; 3/3 answers passed.<br>One-shot only: +1.8%.</td>
+              <td>The fallback version used 32.5% more tokens and 97.7% more time. The one-shot-only version did not lower cost.</td>
+            </tr>
+            <tr>
+              <td>Automatic one-shot prototypes<br><span class="metric-label">1–3 pairs</span></td>
+              <td>First Scout pilot: 0/1 answer passed.<br>Later one-shot: 2/3 passed.</td>
+              <td>For the later run, only two answer-matched pairs support a saving; their median paired saving was 27.6%.</td>
+            </tr>
+            <tr>
+              <td>Code writer and manager-only delegation<br><span class="metric-label">3-pair pilots</span></td>
+              <td>Code writer: +23.2% cost, 2/3 tests passed.<br>Manager-only: +62.9%, 2/3 passed.</td>
+              <td>Delegation added overhead and one-file coding did not benefit in these tests.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="scroll-hint">Scroll the table sideways to read all columns.</p>
+      <p class="measure-note">“+” means more estimated cost than the direct control. “−” means less. Answer checks used different methods across trials, so they are not one shared accuracy score.</p>
+    </section>
+
+    <section aria-labelledby="winner-title">
+      <div class="section-head">
+        <div class="section-kicker">04 / Repeated results</div>
+        <div>
+          <h2 id="winner-title">CC Shunt saved 23.9%. A related variant saved 31.8%.</h2>
+          <p class="section-intro">The CC Shunt README reports the 23.9% result for Scout MCP + hook v2. A separate Offline Shunt checklist run had the largest repeated saving in the local study: 31.8%. These results come from different cohorts and variants.</p>
+        </div>
+      </div>
+      <div class="result-grid">
+        <article class="result-card best">
+          <span class="tag">CC Shunt · 12 paired blocks · corrected broad-read hook</span>
+          <h3>−23.9% estimated credits</h3>
+          <p>Scout MCP + hook v2 cost less in <strong>12 of 12</strong> pairs. Median paired saving: <strong>21.5%</strong>. The 95% bootstrap interval was <strong>12.8% to 36.4%</strong>. All 12 answers passed review.</p>
+        </article>
+        <article class="result-card">
+          <span class="tag">Offline Shunt · separate checklist cohort</span>
+          <h3>−31.8% estimated credits</h3>
+          <p>Estimated credits fell from <strong>70.5007 to 48.0540</strong>. It cost less in <strong>12 of 12</strong> pairs. Median paired saving: <strong>31.7%</strong>; 95% bootstrap interval: <strong>26.9% to 37.7%</strong>. All 12 answers passed manual review and source checks. It used two Scout calls per block.</p>
+        </article>
+      </div>
+      <div class="callout"><strong>Do not merge these claims.</strong> They use separate cohorts and direct controls. The 31.8% result is from the related Offline Shunt checklist experiment, not evidence that the CC Shunt package produces that saving. This is not a randomized head-to-head test.</div>
+    </section>
+
+    <section aria-labelledby="method-title">
+      <div class="section-head">
+        <div class="section-kicker">05 / Method and trade-offs</div>
+        <div>
+          <h2 id="method-title">How to read the numbers</h2>
+          <p class="section-intro">These figures come from one repeated upload-retry investigation in one code repository. The task traced a duplicate-upload billing issue through client retries, uploads, processing, and deduplication.</p>
+        </div>
+      </div>
+      <div class="method-grid">
+        <article class="method-item">
+          <h3>Paired task</h3>
+          <p>Each 12-block cohort compared direct reading with its own delegated variant on the same upload-retry task and source revision. The parent model was gpt-6.1-sol at high effort; Scout used gpt-6-luna at high effort.</p>
+        </article>
+        <article class="method-item">
+          <h3>Cost estimate</h3>
+          <p>Estimated Standard Codex credits used a rate card saved on 2 November 2026. Credits are not an invoice or a USD amount. Different model rates can lower cost even when token totals rise.</p>
+        </article>
+        <article class="method-item">
+          <h3>Token total</h3>
+          <p>Counts include the parent and Scout. CC Shunt used 129.4% more tokens than direct reading. The separate checklist run used 181.1% more. Neither result is token compression.</p>
+        </article>
+        <article class="method-item">
+          <h3>Time total</h3>
+          <p>Time sums parent CLI session durations, including time while the parent waited for Scout. It rose 184.5% for CC Shunt and 210.2% for the checklist variant. It is not wall-clock duration or a measure of parallel completion.</p>
+        </article>
+        <article class="method-item">
+          <h3>Answer review</h3>
+          <p>Reviewers checked answers against the task's answer key and source evidence. All 12 answers passed in each 12-pair cohort. This was not an independent, blinded evaluation across many tasks.</p>
+        </article>
+        <article class="method-item">
+          <h3>Checklist timeout change</h3>
+          <p>In the separate checklist run, three attempts timed out and were excluded. Blocks 7–12 were rerun with longer limits. All 12 included pairs had complete accounting and no Scout timeout. This is a protocol change to note.</p>
+        </article>
+      </div>
+      <div class="table-wrap metric-table" role="region" tabindex="0" aria-label="Comparison of direct reading and CC Shunt. Scroll horizontally on a small screen.">
+        <table>
+          <caption>CC Shunt Scout MCP + hook v2, compared with its own direct controls.</caption>
+          <thead><tr><th scope="col">Measure</th><th scope="col">Direct</th><th scope="col">CC Shunt</th><th scope="col">Change</th></tr></thead>
+          <tbody>
+            <tr><td>Estimated credits</td><td>67.4681</td><td>51.3305</td><td>−23.9%</td></tr>
+            <tr><td>All-model tokens</td><td>5,540,252</td><td>12,710,849</td><td>+129.4%</td></tr>
+            <tr><td>Summed parent session time</td><td>1,614 s</td><td>4,592 s</td><td>+184.5%</td></tr>
+            <tr><td>Answer checks passed</td><td>12/12</td><td>12/12</td><td>Same pass count</td></tr>
+            <tr><td>Worker calls / hook denials</td><td>0 / 0</td><td>27 / 12</td><td>Separate worker calls</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="scroll-hint">Scroll the table sideways to read all columns.</p>
+      <div class="callout"><strong>Why cost and tokens diverged:</strong> The parent and Scout used different models with different rates. Moving work to the lower-rate worker can reduce estimated credits while adding worker prompts, searches, and answers. It can also add wait time. The data does not show that fewer tokens caused the cost reduction.</div>
+    </section>
+
+    <section aria-labelledby="limits-title">
+      <div class="section-head">
+        <div class="section-kicker">06 / Limits</div>
+        <div>
+          <h2 id="limits-title">What this does not prove</h2>
+          <p class="section-intro">Use the numbers for this task and setup. Do not treat them as a forecast for another team, model, or repository.</p>
+        </div>
+      </div>
+      <div class="method-grid">
+        <article class="method-item"><h3>Not a Spotify comparison</h3><p>We did not run Spotify Portal on matching prompts, models, source revisions, and rates. CC Shunt is an independent adaptation. It is not an official Spotify product or affiliated with Spotify.</p></article>
+        <article class="method-item"><h3>One task and repository</h3><p>The strongest repeated results cover one upload-retry investigation. Small trials on document search, translation, and one-file coding had mixed outcomes.</p></article>
+        <article class="method-item"><h3>One harness and rate card</h3><p>The live cost experiments used Codex. Checks for other harness adapters do not establish equal cost, speed, or behavior across those harnesses.</p></article>
+        <article class="method-item"><h3>Routing is not a security boundary</h3><p>The CC Shunt hook detects some broad reads. Some commands and pipes can pass through. The hook does not guarantee delegation or complete source coverage. The parent must check important evidence.</p></article>
+        <article class="method-item"><h3>Cost can change with pricing</h3><p>Credits are rate-card estimates. Model rates, cache use, and worker calls affect the result. A different rate card can change the size or direction of savings.</p></article>
+        <article class="method-item"><h3>Time has a narrow meaning</h3><p>Summed parent-session time rose. Runs could be parallel, so this is not elapsed wall time. The study does not show a faster user experience.</p></article>
+      </div>
+      <div class="callout"><strong>Practical rule:</strong> Use Scout when the task needs broad source discovery across many files and a cited summary can replace repeated reads. Read a short, known section directly when you need one fact. In either case, verify the evidence before you change code.</div>
+    </section>
+
+    <section id="sources" aria-labelledby="sources-title">
+      <div class="section-head">
+        <div class="section-kicker">07 / Sources</div>
+        <div>
+          <h2 id="sources-title">Read the source material</h2>
+          <p class="section-intro">The first two links describe Spotify's project and published claim. The CC Shunt link describes the independent implementation, not Spotify's software.</p>
+        </div>
+      </div>
+      <ol class="sources">
+        <li id="source-1"><span class="source-number">[1]</span><div><a href="https://github.com/spotify/portal-ai-plugins/blob/main/plugins/shunt/README.md">Spotify Portal AI Plugins · Shunt README and benchmark</a><p>Official plugin description and published bulk-read figures.</p></div></li>
+        <li id="source-2"><span class="source-number">[2]</span><div><a href="https://engineering.atspotify.com/2026/9/portal-by-spotify-cut-my-claude-code-token-usage-by-90">Spotify Engineering · “Portal by Spotify cut my Claude Code token usage by 90%”</a><p>Spotify's account of the tool and its reported context-token reduction.</p></div></li>
+        <li id="source-3"><span class="source-number">[3]</span><div><a href="https://github.com/spotify/portal-ai-plugins/blob/main/plugins/shunt/evals/run.sh#L139-L175">Spotify Shunt · benchmark script</a><p>Benchmark calculation for the selected-text token estimate.</p></div></li>
+        <li id="source-4"><span class="source-number">[4]</span><div><a href="https://github.com/nthe/cc-shunt#evidence">CC Shunt · implementation and evidence summary</a><p>Independent adaptation and published summary. It is not an official Spotify plugin.</p></div></li>
+      </ol>
+      <p class="study-record"><strong>About the local experiment evidence.</strong> The CC Shunt README summarizes the 23.9% result. The related Offline Shunt checklist figures come from paired run records, rate-card calculations, and answer reviews in this study. Detailed run records are not published as a linked dataset. The repository link above supports implementation details; it is not a source for private benchmark logs.</p>
+    </section>
+
+    <footer>
+      <a href="../">← Talk: Tokens Under Control</a>
+      <a href="../../..">Main site ↑</a>
+    </footer>
+  </main>
+</body>
+</html>

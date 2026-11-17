@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="pele pele-sankey" viewBox="0 0 616 424" width="616" height="424" style="max-width:100%;height:auto;--_bg:var(--pele-bg,#fff);--_fg:#111;--_m:var(--pele-muted,#6e6e6e);--_l:var(--pele-line,#1f1f1f);--_s:var(--pele-surface,#f3f3f3);--_a:var(--pele-surface-alt,#e6e6e6);--_b:var(--pele-border,#8a8a8a);--_c:var(--pele-accent,#5b7bd5);color:var(--_fg);--_fm:var(--pele-font-mono,ui-monospace, SFMono-Regular, &quot;Cascadia Code&quot;, &quot;IBM Plex Mono&quot;, &quot;Roboto Mono&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Liberation Mono&quot;, Menlo, Monaco, &quot;Consolas&quot;, &quot;Source Code Pro&quot;, monospace);font:16px sans-serif;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;font-family:system-ui, sans-serif" fill="var(--_fg)" role="graphics-document document" aria-roledescription="sankey">
+  <g transform="translate(8,8)">
+    <defs>
+      <linearGradient id="pele--sankey-rr29351nsk239" gradientUnits="userSpaceOnUse" x1="8" x2="296">
+        <stop offset="0" stop-color="var(--pele-series-1,#4c78a8)"/>
+        <stop offset="1" stop-color="var(--pele-series-2,#f58518)"/>
+      </linearGradient>
+      <linearGradient id="pele--sankey-tqb9gi4pi214" gradientUnits="userSpaceOnUse" x1="304" x2="592">
+        <stop offset="0" stop-color="var(--pele-series-2,#f58518)"/>
+        <stop offset="1" stop-color="var(--pele-series-3,#54a24b)"/>
+      </linearGradient>
+      <linearGradient id="pele--sankey-18kap291z37d3" gradientUnits="userSpaceOnUse" x1="304" x2="592">
+        <stop offset="0" stop-color="var(--pele-series-2,#f58518)"/>
+        <stop offset="1" stop-color="var(--pele-series-4,#e45756)"/>
+      </linearGradient>
+      <linearGradient id="pele--sankey-1grismi19gwq5q" gradientUnits="userSpaceOnUse" x1="304" x2="592">
+        <stop offset="0" stop-color="var(--pele-series-2,#f58518)"/>
+        <stop offset="1" stop-color="var(--pele-series-5,#72b7b2)"/>
+      </linearGradient>
+      <linearGradient id="pele--sankey-1g674861e0fgc" gradientUnits="userSpaceOnUse" x1="304" x2="592">
+        <stop offset="0" stop-color="var(--pele-series-2,#f58518)"/>
+        <stop offset="1" stop-color="var(--pele-series-6,#eeca3b)"/>
+      </linearGradient>
+      <linearGradient id="pele--sankey-us5dtl1o74pw1" gradientUnits="userSpaceOnUse" x1="304" x2="592">
+        <stop offset="0" stop-color="var(--pele-series-2,#f58518)"/>
+        <stop offset="1" stop-color="var(--pele-series-7,#b279a2)"/>
+      </linearGradient>
+      <linearGradient id="pele--sankey-vaiqy4zrjbnw" gradientUnits="userSpaceOnUse" x1="8" x2="296">
+        <stop offset="0" stop-color="var(--pele-series-1,#4c78a8)"/>
+        <stop offset="1" stop-color="var(--pele-series-8,#9d755d)"/>
+      </linearGradient>
+      <linearGradient id="pele--sankey-xuv86c1d128ji" gradientUnits="userSpaceOnUse" x1="304" x2="592">
+        <stop offset="0" stop-color="var(--pele-series-8,#9d755d)"/>
+        <stop offset="1" stop-color="var(--pele-series-4,#e45756)"/>
+      </linearGradient>
+      <linearGradient id="pele--sankey-nqbluj1frh37j" gradientUnits="userSpaceOnUse" x1="304" x2="592">
+        <stop offset="0" stop-color="var(--pele-series-8,#9d755d)"/>
+        <stop offset="1" stop-color="var(--pele-series-3,#54a24b)"/>
+      </linearGradient>
+      <linearGradient id="pele--sankey-wujgk4107zp3c" gradientUnits="userSpaceOnUse" x1="304" x2="592">
+        <stop offset="0" stop-color="var(--pele-series-8,#9d755d)"/>
+        <stop offset="1" stop-color="var(--pele-series-7,#b279a2)"/>
+      </linearGradient>
+      <linearGradient id="pele--sankey-d92ghz1cfzgmr" gradientUnits="userSpaceOnUse" x1="304" x2="592">
+        <stop offset="0" stop-color="var(--pele-series-8,#9d755d)"/>
+        <stop offset="1" stop-color="var(--pele-series-6,#eeca3b)"/>
+      </linearGradient>
+    </defs>
+    <g class="pele-sankey-links" fill-opacity="0.4">
+      <path class="pele-sankey-link" data-id="Products-&gt;Numeric claims" d="M8,22.44C152,22.44 152,22.04 296,22.04L296,225.47C152,225.47 152,225.88 8,225.88Z" fill="url(#pele--sankey-rr29351nsk239) var(--pele-series-1,#4c78a8)">
+        <title>Products → numerical author token claim: 93</title>
+      </path>
+      <path class="pele-sankey-link" data-id="Numeric claims-&gt;No evidence" d="M304,22.04C448,22.04 448,0 592,0L592,181.56C448,181.56 448,203.6 304,203.6Z" fill="url(#pele--sankey-tqb9gi4pi214) var(--pele-series-2,#f58518)">
+        <title>Numerical author token claim → no qualifying cost result: 83</title>
+      </path>
+      <path class="pele-sankey-link" data-id="Numeric claims-&gt;Reduced" d="M304,223.29C448,223.29 448,393.44 592,393.44L592,395.63C448,395.63 448,225.47 304,225.47Z" fill="url(#pele--sankey-18kap291z37d3) var(--pele-series-2,#f58518)">
+        <title>Numerical author token claim → cost reduced only: 1</title>
+      </path>
+      <path class="pele-sankey-link" data-id="Numeric claims-&gt;Mixed" d="M304,203.6C448,203.6 448,279.38 592,279.38L592,288.13C448,288.13 448,212.35 304,212.35Z" fill="url(#pele--sankey-1grismi19gwq5q) var(--pele-series-2,#f58518)">
+        <title>Numerical author token claim → mixed cost results: 4</title>
+      </path>
+      <path class="pele-sankey-link" data-id="Numeric claims-&gt;Partial" d="M304,212.35C448,212.35 448,318.13 592,318.13L592,324.69C448,324.69 448,218.91 304,218.91Z" fill="url(#pele--sankey-1g674861e0fgc) var(--pele-series-2,#f58518)">
+        <title>Numerical author token claim → modeled or incomplete savings: 3</title>
+      </path>
+      <path class="pele-sankey-link" data-id="Numeric claims-&gt;Increased" d="M304,218.91C448,218.91 448,356.88 592,356.88L592,361.25C448,361.25 448,223.29 304,223.29Z" fill="url(#pele--sankey-us5dtl1o74pw1) var(--pele-series-2,#f58518)">
+        <title>Numerical author token claim → cost increased only: 2</title>
+      </path>
+      <path class="pele-sankey-link" data-id="Products-&gt;Verbal claims" d="M8,225.88C152,225.88 152,255.47 296,255.47L296,332.04C152,332.04 152,302.44 8,302.44Z" fill="url(#pele--sankey-vaiqy4zrjbnw) var(--pele-series-1,#4c78a8)">
+        <title>Products → no numerical token claim recorded: 35</title>
+      </path>
+      <path class="pele-sankey-link" data-id="Verbal claims-&gt;Reduced" d="M304,327.66C448,327.66 448,395.63 592,395.63L592,400C448,400 448,332.04 304,332.04Z" fill="url(#pele--sankey-xuv86c1d128ji) var(--pele-series-8,#9d755d)">
+        <title>No numerical token claim recorded → cost reduced only: 2</title>
+      </path>
+      <path class="pele-sankey-link" data-id="Verbal claims-&gt;No evidence" d="M304,255.47C448,255.47 448,181.56 592,181.56L592,249.37C448,249.37 448,323.29 304,323.29Z" fill="url(#pele--sankey-nqbluj1frh37j) var(--pele-series-8,#9d755d)">
+        <title>No numerical token claim recorded → no qualifying cost result: 31</title>
+      </path>
+      <path class="pele-sankey-link" data-id="Verbal claims-&gt;Increased" d="M304,325.47C448,325.47 448,361.25 592,361.25L592,363.44C448,363.44 448,327.66 304,327.66Z" fill="url(#pele--sankey-wujgk4107zp3c) var(--pele-series-8,#9d755d)">
+        <title>No numerical token claim recorded → cost increased only: 1</title>
+      </path>
+      <path class="pele-sankey-link" data-id="Verbal claims-&gt;Partial" d="M304,323.29C448,323.29 448,324.69 592,324.69L592,326.88C448,326.88 448,325.47 304,325.47Z" fill="url(#pele--sankey-d92ghz1cfzgmr) var(--pele-series-8,#9d755d)">
+        <title>No numerical token claim recorded → modeled or incomplete savings: 1</title>
+      </path>
+    </g>
+    <g class="pele-sankey-nodes">
+      <rect class="pele-sankey-node" data-id="Products" x="0" y="22.44" width="8" height="280" rx="2" fill="var(--pele-series-1,#4c78a8)"/>
+      <rect class="pele-sankey-node" data-id="Numeric claims" x="296" y="22.04" width="8" height="203.44" rx="2" fill="var(--pele-series-2,#f58518)"/>
+      <rect class="pele-sankey-node" data-id="No evidence" x="592" y="0" width="8" height="249.38" rx="2" fill="var(--pele-series-3,#54a24b)"/>
+      <rect class="pele-sankey-node" data-id="Reduced" x="592" y="393.44" width="8" height="6.56" rx="2" fill="var(--pele-series-4,#e45756)"/>
+      <rect class="pele-sankey-node" data-id="Mixed" x="592" y="279.38" width="8" height="8.75" rx="2" fill="var(--pele-series-5,#72b7b2)"/>
+      <rect class="pele-sankey-node" data-id="Partial" x="592" y="318.13" width="8" height="8.75" rx="2" fill="var(--pele-series-6,#eeca3b)"/>
+      <rect class="pele-sankey-node" data-id="Increased" x="592" y="356.88" width="8" height="6.56" rx="2" fill="var(--pele-series-7,#b279a2)"/>
+      <rect class="pele-sankey-node" data-id="Verbal claims" x="296" y="255.47" width="8" height="76.56" rx="2" fill="var(--pele-series-8,#9d755d)"/>
+    </g>
+    <g class="pele-labels" font-size="14" fill="#111">
+      <g class="pele-label" data-id="Products">
+        <text x="14" y="159" text-anchor="start"><tspan x="14">Products</tspan><tspan x="14" dy="18">128</tspan></text>
+      </g>
+      <g class="pele-label" data-id="Numeric claims">
+        <text x="286" y="120" text-anchor="end"><tspan x="286">Numerical author</tspan><tspan x="286" dy="18">token claim · 93</tspan></text>
+      </g>
+      <g class="pele-label" data-id="No evidence">
+        <text x="586" y="120" text-anchor="end"><tspan x="586">No qualifying cost</tspan><tspan x="586" dy="18">result · 114</tspan></text>
+      </g>
+      <g class="pele-label" data-id="Reduced">
+        <text x="586" y="401.62" text-anchor="end">Cost reduced only · 3</text>
+      </g>
+      <g class="pele-label" data-id="Mixed">
+        <text x="586" y="288.65" text-anchor="end">Mixed cost results · 4</text>
+      </g>
+      <g class="pele-label" data-id="Partial">
+        <text x="586" y="327.4" text-anchor="end">Modeled or incomplete · 4</text>
+      </g>
+      <g class="pele-label" data-id="Increased">
+        <text x="586" y="365.06" text-anchor="end">Cost increased only · 3</text>
+      </g>
+      <g class="pele-label" data-id="Verbal claims">
+        <text x="286" y="288" text-anchor="end"><tspan x="286">No numerical token</tspan><tspan x="286" dy="18">claim recorded · 35</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "scripts": {
+    "diagrams": "node tools/render-diagrams.mjs",
+    "check": "python3 tests/check_site.py && python3 tests/check_sankey.py && python3 talks/codecon-26/research/test_tables.py && python3 talks/codecon-26/research/test_claims_charts.py && node talks/codecon-26/one-shot/verify.mjs && node tools/render-diagrams.mjs --check"
+  },
+  "devDependencies": {
+    "pele": "1.13.0"
+  }
+}

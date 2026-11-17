@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>CodeCon 26 — Tokens Under Control</title>
+  <style>
+    :root { --bg: #fff; --text: #111; --muted: #555; --rule: #c9c9c9; --orange: #ff9a32; --mint: #d7f5e1; --lilac: #e7dff5; }
+    html[data-theme="dark"] { --bg: #111; --text: #f7f7f7; --muted: #bbb; --rule: #494949; --orange: #ff9a32; --mint: #d7f5e1; --lilac: #e7dff5; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; line-height: 1.5; }
+    main { width: min(100% - 3rem, 76rem); margin: 0 auto; padding: 1.5rem 0 6rem; }
+    a { color: inherit; }
+    a:focus-visible { outline: 2px solid #c75000; outline-offset: 4px; }
+    .back, .event, .label, .more h2 { font: 600 .8rem/1.5 ui-monospace, "SFMono-Regular", Consolas, monospace; }
+    .back { color: var(--muted); text-underline-offset: .2em; }
+    header { max-width: 59rem; padding: clamp(4rem, 8vw, 7rem) 0 clamp(3rem, 6vw, 5rem); }
+    .event { margin: 0 0 1rem; }
+    h1 { margin: 0; font-size: clamp(3.2rem, 8vw, 6.7rem); line-height: .96; letter-spacing: -.065em; }
+    .dek { max-width: 49rem; margin: 1.5rem 0 0; color: var(--muted); font: 1rem/1.75 ui-monospace, "SFMono-Regular", Consolas, monospace; }
+    .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.8rem; }
+    .card { color: inherit; text-decoration: none; }
+    .card h2 { margin: 1.15rem 0 .45rem; font-size: clamp(1.35rem, 2.4vw, 1.75rem); line-height: 1.15; letter-spacing: -.04em; }
+    .card:hover h2 { text-decoration: underline; text-underline-offset: .15em; }
+    .card p { margin: 0; color: var(--muted); font: .85rem/1.65 ui-monospace, "SFMono-Regular", Consolas, monospace; }
+    .art { position: relative; display: flex; align-items: center; justify-content: center; min-height: 15rem; overflow: hidden; color: #111; }
+    .art .label { position: absolute; bottom: .7rem; right: .7rem; padding: .25rem .4rem; background: #111; color: #fff; font-size: .65rem; }
+    .survey { background: var(--orange); }
+    .survey-grid { position: absolute; inset: 18% 16%; background-image: linear-gradient(#111 1px, transparent 1px), linear-gradient(90deg, #111 1px, transparent 1px); background-size: 1.25rem 1.25rem; transform: rotate(-8deg); }
+    .survey-number { position: absolute; left: 18%; top: 28%; padding: .3rem .6rem; background: #111; color: #fff; font: 700 clamp(2.5rem, 4vw, 4rem)/1 ui-monospace, monospace; }
+    .shunt { background: var(--mint); }
+    .flow { display: grid; grid-template-columns: auto auto auto; align-items: center; gap: .65rem; font: 600 .82rem/1.2 ui-monospace, monospace; }
+    .flow span:not(:nth-child(2)) { border: 1px solid #111; padding: 1rem .75rem; background: #fff; }
+    .prompt { background: var(--lilac); }
+    .prompt-mark { border: 1px solid #111; padding: 1rem 1.5rem; background: #fff; font: 700 clamp(2.8rem, 5vw, 4.5rem)/1 ui-monospace, monospace; }
+    .more { margin-top: 5rem; border-top: 1px solid var(--rule); padding-top: 1rem; display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
+    .more h2 { margin: 0; }
+    .more a { font-size: 1.2rem; font-weight: 650; text-underline-offset: .2em; }
+    .more p { margin: .5rem 0 0; color: var(--muted); font: .85rem/1.65 ui-monospace, "SFMono-Regular", Consolas, monospace; }
+    @media (max-width: 760px) { .cards { grid-template-columns: 1fr; gap: 2.5rem; } .art { min-height: 13rem; } .more { grid-template-columns: 1fr; gap: 1rem; } }
+    @media (max-width: 480px) { main { width: calc(100% - 2rem); } header { padding: 3rem 0; } }
+  </style>
+  <link rel="stylesheet" href="../../assets/theme.css">
+  <script src="../../assets/theme.js"></script>
+</head>
+<body>
+  <main>
+    <a class="back" href="../../">← All links</a>
+    <header>
+      <p class="event">CodeCon 26</p>
+      <h1>Tokens Under Control</h1>
+      <p class="dek">Research and experiments on reducing the cost of working with AI models—from a broad survey to a hands-on test of delegated reading.</p>
+    </header>
+    <nav class="cards" aria-label="Talk resources">
+      <a class="card" href="research/">
+        <div class="art survey" aria-hidden="true"><div class="survey-grid"></div><span class="survey-number">128</span><span class="label">Research</span></div>
+        <h2>Token reduction research</h2>
+        <p>A survey of products, independent benchmarks, and the difference between claims and measured results.</p>
+      </a>
+      <a class="card" href="cc-shunt/">
+        <div class="art shunt" aria-hidden="true"><div class="flow"><span>Parent</span><span>→</span><span>Scout</span></div><span class="label">Experiment</span></div>
+        <h2>From Spotify Shunt to CC Shunt</h2>
+        <p>How delegated reading works, what the variants showed, and the trade-offs behind the result.</p>
+      </a>
+      <a class="card" href="one-shot/">
+        <div class="art prompt" aria-hidden="true"><span class="prompt-mark">&gt;_</span><span class="label">One prompt</span></div>
+        <h2>One-shot Shunt</h2>
+        <p>The single prompt and a redacted record of the session that produced a separate implementation.</p>
+      </a>
+    </nav>
+    <section class="more" aria-labelledby="further-heading">
+      <h2 id="further-heading">Further viewing</h2>
+      <div>
+        <a href="https://www.youtube.com/watch?v=maitMe9HCvw">How to Get Frontier Coding Results at 70% Lower Cost ↗</a>
+        <p>Nouha Dziri of Cohere on reducing costs in multi-agent systems.</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

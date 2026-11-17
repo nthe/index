@@ -1,0 +1,5 @@
+flowchart TD
+  A[Parent receives a task] --> B[Hook blocks a broad read]
+  B --> C[Scout searches related files]
+  C --> D[Scout returns cited evidence]
+  D --> E[Parent checks evidence and continues]
